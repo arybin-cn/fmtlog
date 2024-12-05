@@ -13,19 +13,9 @@ else()
 endif()
 
 link_directories(.)
-include_directories(fmt/include)
 
-add_library(fmtlog-shared SHARED fmtlog.cc)
-if(MSVC)
-  target_link_libraries(fmtlog-shared fmt)
-endif()
-install(TARGETS fmtlog-shared)
-
-add_library(fmtlog-static fmtlog.cc)
-if(MSVC)
-  target_link_libraries(fmtlog-static fmt)
-endif()
-install(TARGETS fmtlog-static)
+add_library(fmtlog fmtlog.cc)
+target_include_directories(fmtlog PUBLIC fmt/include)
+target_link_libraries(fmtlog PUBLIC fmt)
 
 add_subdirectory(fmt)
-add_subdirectory(test)
