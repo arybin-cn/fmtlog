@@ -241,6 +241,8 @@ public:
   std::vector<StaticLogInfo> logInfos;
   std::vector<StaticLogInfo> bgLogInfos;
 
+  std::mutex pollMutex;
+
   fmtlog::LogCBFn logCB = nullptr;
   fmtlog::LogLevel minCBLogLevel;
   fmtlog::LogQFullCBFn logQFullCB = fmtlogEmptyFun;
@@ -420,6 +422,7 @@ public:
   }
 
   void poll(bool forceFlush) {
+    std::lock_guard<std::mutex> lock(pollMutex);
     fmtlogWrapper<>::impl.tscns.calibrate();
     int64_t tsc = fmtlogWrapper<>::impl.tscns.rdtsc();
     if (logInfos.size()) {
